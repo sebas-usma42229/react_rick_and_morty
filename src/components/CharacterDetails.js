@@ -1,0 +1,43 @@
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import image from './../assets/images/rick-sanchez.gif';
+import Character from "./Character";
+
+const CharacterDetails = () => {
+
+    const {id} = useParams();
+    const [character, setCharacter] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+
+        fetch(`https://rickandmortyapi.com/api/character/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                setCharacter(data);
+                setIsLoading(false);
+    })
+    }, [id]);  
+
+        return (
+            <>
+            {isLoading ? <div className="d-flex justify-content-center text-center"><img id="img-loading" src={image} alt="loading" /></div> : ''}
+            {!isLoading && <Character
+                        key={character.id}
+                        id={character.id}
+                        name={character.name}
+                        image={character.image}
+                        status={character.status}
+                        species={character.species}
+                        location={character.location.name}
+                        gender={character.gender} />}
+            </>
+            
+
+        );
+
+
+
+}
+
+export default CharacterDetails;
